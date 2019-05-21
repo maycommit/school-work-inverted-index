@@ -75,9 +75,8 @@ def main():
     text_files = get_text_in_files(get_base_file())
     filtered_list = filter_list(transform_list_to_text(text_files))
     dictionary = create_dictionary(filtered_list)
-    indexing(filtered_list, dictionary, text_files)
+    indexing(sorted(filtered_list), dictionary, text_files)
     write_dictionary_in_file(dictionary)
-    print(dictionary)
 
 main()
 
