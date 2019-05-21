@@ -13,9 +13,10 @@ import ssl
 # nltk.download('averaged_perceptron_tagger')
 
 TAGS = {
-    'PREPOSITION': 'IN',
-    'CONJUNCTION': 'CC',
-    'ARTICLE': 'RP'
+    'PREPOSITION': 'PREP',
+    'COORDINATING_CONJUNCTION': 'KC',
+    'SUBORDINATE_CONJUNCTION': 'KS',
+    'ARTICLE': 'ART'
 }
 
 def get_base_file():
@@ -24,7 +25,7 @@ def get_base_file():
 
 def get_text_in_files(base_file):
     files = base_file.read()
-    return [open(file, 'r').read() for file in files.split('\n')]
+    return [open(file, 'r').read().lower() for file in files.split('\n')]
 
 def get_stopwords():
     return nltk.corpus.stopwords.words('portuguese')
@@ -33,7 +34,10 @@ def transform_list_to_text(list):
     return ' '.join(list)
 
 def is_preposition_conjuntion_article(word):
-    return word[1] == TAGS['PREPOSITION'] and word[1] == TAGS['CONJUNCTION'] and TAGS['ARTICLE']
+    return word[1] == TAGS['PREPOSITION'] \
+           and word[1] == TAGS['COORDINATING_CONJUNCTION'] \
+           and word[1] == TAGS['SUBORDINATE_CONJUNCTION'] \
+           and word[1] == TAGS['ARTICLE']
 
 def filter_preposition_conjunction_article(list):
     words_tags = nltk.pos_tag(list)
@@ -43,7 +47,7 @@ def filter_list(text):
     stemmer = nltk.stem.RSLPStemmer()
     list = re.sub(r' |\.|,|!|\?|\...|\n', ' ', text).split()
     list_filtered = filter_preposition_conjunction_article(list)
-    return [stemmer.stem(word.lower()) for word in list_filtered if word not in get_stopwords()]
+    return [stemmer.stem(word) for word in list_filtered if word not in get_stopwords()]
 
 def create_dictionary(list):
     return { word: {} for word in list }
